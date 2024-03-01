@@ -1,3 +1,6 @@
+use interpreter_rust::lexer::Lexer;
+
 fn main() {
-    println!("Hello, world!");
+	let x = Lexer::new("let five = 5;");
+	dbg!(x);
 }
