@@ -20,4 +20,11 @@ Currently, this interpreter lexes the following tokens
 - ')'
 - '{'
 - '}'
+- 'let'
+- 'fn'
+- 'if'
+- 'else'
+- 'return'
+- 'true'
+- 'false'
 - Identifiers containing alphabetic characters

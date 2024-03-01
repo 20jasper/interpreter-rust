@@ -20,16 +20,30 @@ pub enum Token {
 	RightParen,
 	LeftBrace,
 	RightBrace,
-	// Function,
-	// Let,
-	// True,
-	// False,
-	// If,
-	// Else,
-	// Return,
+	Function,
+	Let,
+	True,
+	False,
+	If,
+	Else,
+	Return,
 }
 
 impl Token {
+	pub fn from_string(s: String) -> Token {
+		use Token as T;
+		match s.as_str() {
+			"let" => T::Let,
+			"fn" => T::Function,
+			"true" => T::True,
+			"false" => T::False,
+			"if" => T::If,
+			"else" => T::Else,
+			"return" => T::Return,
+			_ => T::Identifier(s),
+		}
+	}
+
 	pub fn from_char(s: char) -> Option<Token> {
 		use Token as T;
 		match s {

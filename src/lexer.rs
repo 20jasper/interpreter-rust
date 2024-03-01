@@ -33,7 +33,7 @@ impl<'a> Iterator for Lexer<'a> {
 				s.push(self.chars.next().unwrap());
 			}
 
-			Some(Token::Identifier(s))
+			Some(Token::from_string(s))
 		})
 	}
 }
@@ -87,6 +87,26 @@ mod tests {
 			Token::Identifier("five".to_string()),
 			Token::Identifier("hello".to_string()),
 			Token::Identifier("what".to_string()),
+			Token::Semicolon,
+		];
+
+		assert_eq!(tokens, expected);
+	}
+
+	#[test]
+	fn should_parse_keywords() {
+		let s = "let return if else  fn true+false;";
+		let tokens = Lexer::new(s).collect::<Vec<Token>>();
+
+		let expected = vec![
+			Token::Let,
+			Token::Return,
+			Token::If,
+			Token::Else,
+			Token::Function,
+			Token::True,
+			Token::Plus,
+			Token::False,
 			Token::Semicolon,
 		];
 
