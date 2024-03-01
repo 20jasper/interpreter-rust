@@ -7,6 +7,8 @@ Interpreter inspired by Monkey language from the book "Writing an Interpreter in
 Currently, this interpreter lexes the following tokens
 
 - '='
+- '=='
+- '!='
 - '+'
 - '-'
 - '!'

@@ -40,6 +40,14 @@ impl<'a> Iterator for Lexer<'a> {
 			.chars
 			.find(|&c| !c.is_whitespace())?;
 
+		if (next == '=' || next == '!') && self.chars.peek() == Some(&'=') {
+			self.chars.next();
+			if next == '=' {
+				return Some(Token::Eq);
+			}
+			return Some(Token::NotEq);
+		}
+
 		Token::from_char(next).or_else(|| {
 			if next.is_alphabetic() {
 				let s = self.build_string_while(next, |c| c.is_alphabetic());
@@ -143,6 +151,16 @@ mod tests {
 			Token::Int(20),
 			Token::Semicolon,
 		];
+
+		assert_eq!(tokens, expected);
+	}
+
+	#[test]
+	fn should_parse_multi_character_non_alphanumeric_tokens() {
+		let s = "!= == ";
+		let tokens = Lexer::new(s).collect::<Vec<Token>>();
+
+		let expected = vec![Token::NotEq, Token::Eq];
 
 		assert_eq!(tokens, expected);
 	}
