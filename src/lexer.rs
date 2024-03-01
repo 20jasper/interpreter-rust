@@ -13,6 +13,23 @@ impl<'a> Lexer<'a> {
 			chars: input.chars().peekable(),
 		}
 	}
+
+	fn build_string_while<F>(&mut self, first: impl Into<String>, condition: F) -> String
+	where
+		F: Fn(char) -> bool,
+	{
+		let mut s = first.into();
+
+		while self
+			.chars
+			.peek()
+			.is_some_and(|c| condition(*c))
+		{
+			s.push(self.chars.next().unwrap());
+		}
+
+		s
+	}
 }
 
 impl<'a> Iterator for Lexer<'a> {
@@ -24,16 +41,17 @@ impl<'a> Iterator for Lexer<'a> {
 			.find(|&c| !c.is_whitespace())?;
 
 		Token::from_char(next).or_else(|| {
-			let mut s = next.to_string();
+			if next.is_alphabetic() {
+				let s = self.build_string_while(next, |c| c.is_alphabetic());
 
-			while let Some(c) = self.chars.peek() {
-				if !c.is_alphabetic() {
-					break;
-				}
-				s.push(self.chars.next().unwrap());
+				Some(Token::from_string(s))
+			} else if next.is_numeric() {
+				let s = self.build_string_while(next, |c| c.is_numeric());
+
+				Some(Token::Int(s.parse().unwrap()))
+			} else {
+				None
 			}
-
-			Some(Token::from_string(s))
 		})
 	}
 }
@@ -107,6 +125,22 @@ mod tests {
 			Token::True,
 			Token::Plus,
 			Token::False,
+			Token::Semicolon,
+		];
+
+		assert_eq!(tokens, expected);
+	}
+
+	#[test]
+	fn should_parse_integers() {
+		let s = "5 10 15 20;";
+		let tokens = Lexer::new(s).collect::<Vec<Token>>();
+
+		let expected = vec![
+			Token::Int(5),
+			Token::Int(10),
+			Token::Int(15),
+			Token::Int(20),
 			Token::Semicolon,
 		];
 

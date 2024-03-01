@@ -28,3 +28,4 @@ Currently, this interpreter lexes the following tokens
 - 'true'
 - 'false'
 - Identifiers containing alphabetic characters
+- non negative 32 bit integers

@@ -1,9 +1,9 @@
 #[derive(Debug, PartialEq, Eq, Clone)]
 pub enum Token {
-	Eof,
+	// Eof,
 	Identifier(String),
 	// Illegal,
-	// Int,
+	Int(i32),
 	Assign,
 	// Eq,
 	// NotEq,
