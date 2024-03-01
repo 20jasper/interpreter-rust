@@ -1,5 +1,7 @@
 use core::str::Chars;
 
+use crate::token::Token;
+
 #[derive(Debug)]
 pub struct Lexer<'a> {
 	chars: Chars<'a>,
@@ -14,10 +16,14 @@ impl<'a> Lexer<'a> {
 }
 
 impl<'a> Iterator for Lexer<'a> {
-	type Item = char;
+	type Item = Token;
 
 	fn next(&mut self) -> Option<Self::Item> {
-		self.chars.find(|&c| !c.is_whitespace())
+		let next = self
+			.chars
+			.find(|&c| !c.is_whitespace())?;
+
+		Token::build(next)
 	}
 }
 
@@ -27,9 +33,32 @@ mod tests {
 
 	#[test]
 	fn tokens_should_not_contain_white_space() {
-		let s = "let five = 5;";
-		let tokens = ['l', 'e', 't', 'f', 'i', 'v', 'e', '=', '5', ';'].into_iter();
+		let s = "( = ;";
+		let tokens = vec![Token::LeftParen, Token::Assign, Token::Semicolon];
 
-		assert!(Lexer::new(s).eq(tokens));
+		assert_eq!(Lexer::new(s).collect::<Vec<Token>>(), tokens);
+	}
+
+	#[test]
+	fn should_parse_single_char_tokens() {
+		let s = "=+-!*/<,>(){};";
+		let tokens = vec![
+			Token::Assign,
+			Token::Plus,
+			Token::Minus,
+			Token::Bang,
+			Token::Asterisk,
+			Token::Slash,
+			Token::LessThan,
+			Token::Comma,
+			Token::GreaterThan,
+			Token::LeftParen,
+			Token::RightParen,
+			Token::LeftBrace,
+			Token::RightBrace,
+			Token::Semicolon,
+		];
+
+		assert_eq!(Lexer::new(s).collect::<Vec<Token>>(), tokens);
 	}
 }
