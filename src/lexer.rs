@@ -48,7 +48,7 @@ impl<'a> Iterator for Lexer<'a> {
 			return Some(Token::NotEq);
 		}
 
-		Token::from_char(next).or_else(|| {
+		Token::try_from_char(next).or_else(|| {
 			if next.is_alphabetic() {
 				let s = self.build_string_while(next, |c| c.is_alphabetic());
 

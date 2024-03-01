@@ -44,7 +44,7 @@ impl Token {
 		}
 	}
 
-	pub fn from_char(s: char) -> Option<Token> {
+	pub fn try_from_char(s: char) -> Option<Token> {
 		use Token as T;
 		match s {
 			'=' => Some(T::Assign),
