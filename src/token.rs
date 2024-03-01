@@ -1,7 +1,7 @@
 #[derive(Debug, PartialEq, Eq, Clone)]
 pub enum Token {
 	Eof,
-	// Ident,
+	Identifier(String),
 	// Illegal,
 	// Int,
 	Assign,
@@ -30,7 +30,7 @@ pub enum Token {
 }
 
 impl Token {
-	pub fn build(s: char) -> Option<Token> {
+	pub fn from_char(s: char) -> Option<Token> {
 		use Token as T;
 		match s {
 			'=' => Some(T::Assign),
