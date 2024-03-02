@@ -1,8 +1,10 @@
-use interpreter_rust::lexer::Lexer;
+use std::io;
 
-fn main() {
-	let x = Lexer::new("let five = 5;");
-	for c in x {
-		dbg!(c);
-	}
+use interpreter_rust::repl;
+
+fn main() -> io::Result<()> {
+	println!("Hello! This is the Monkey programming language!");
+	println!("Please type a commmand:");
+
+	repl::run()
 }
