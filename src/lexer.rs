@@ -1,4 +1,4 @@
-use core::{iter::Peekable, str::Chars};
+use core::{iter::Peekable, num, str::Chars};
 
 use crate::token::Token;
 
@@ -56,7 +56,10 @@ impl<'a> Iterator for Lexer<'a> {
 			} else if next.is_numeric() {
 				let s = self.build_string_while(next, |c| c.is_numeric());
 
-				Some(Token::Int(s.parse().unwrap()))
+				match s.parse() {
+					Ok(num) => Some(Token::Int(num)),
+					Err(e) => Some(Token::Illegal(e.to_string())),
+				}
 			} else {
 				None
 			}
