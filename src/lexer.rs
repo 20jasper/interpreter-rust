@@ -1,4 +1,4 @@
-use core::{iter::Peekable, num, str::Chars};
+use core::{iter::Peekable, str::Chars};
 
 use crate::token::Token;
 
@@ -36,8 +36,7 @@ impl<'a> Iterator for Lexer<'a> {
 			.chars
 			.find(|&c| !c.is_whitespace())?;
 
-		if (next == '=' || next == '!') && self.chars.peek() == Some(&'=') {
-			self.chars.next();
+		if self.chars.next_if_eq(&'=').is_some() {
 			if next == '=' {
 				return Some(Token::Eq);
 			}
