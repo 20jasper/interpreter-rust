@@ -1,4 +1,7 @@
-use core::{iter::Peekable, str::Chars};
+use core::{
+	iter::{self, Peekable},
+	str::Chars,
+};
 
 use crate::token::Token;
 
@@ -14,17 +17,13 @@ impl<'a> Lexer<'a> {
 		}
 	}
 
-	fn build_string_while<F>(&mut self, first: impl Into<String>, condition: F) -> String
+	fn build_string_while<F>(&mut self, first: char, condition: F) -> String
 	where
 		F: Fn(char) -> bool,
 	{
-		let mut s = first.into();
-
-		while let Some(c) = self.chars.next_if(|c| condition(*c)) {
-			s.push(c);
-		}
-
-		s
+		iter::once(first)
+			.chain(iter::from_fn(|| self.chars.next_if(|c| condition(*c))))
+			.collect::<String>()
 	}
 }
 
