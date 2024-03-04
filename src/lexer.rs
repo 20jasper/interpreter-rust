@@ -20,12 +20,8 @@ impl<'a> Lexer<'a> {
 	{
 		let mut s = first.into();
 
-		while self
-			.chars
-			.peek()
-			.is_some_and(|c| condition(*c))
-		{
-			s.push(self.chars.next().unwrap());
+		while let Some(c) = self.chars.next_if(|c| condition(*c)) {
+			s.push(c);
 		}
 
 		s
