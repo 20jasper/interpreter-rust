@@ -11,7 +11,7 @@ pub struct Lexer<'a> {
 }
 
 impl<'a> Lexer<'a> {
-	pub fn new(input: &str) -> Lexer {
+	pub fn new(input: &'a str) -> Lexer<'a> {
 		Lexer {
 			chars: input.chars().peekable(),
 		}
@@ -44,11 +44,11 @@ impl<'a> Iterator for Lexer<'a> {
 
 		Token::try_from_char(next).or_else(|| {
 			if next.is_alphabetic() {
-				let s = self.build_string_while(next, |c| c.is_alphabetic());
+				let s = self.build_string_while(next, char::is_alphabetic);
 
 				Some(Token::from_string(s))
 			} else if next.is_numeric() {
-				let s = self.build_string_while(next, |c| c.is_numeric());
+				let s = self.build_string_while(next, char::is_numeric);
 
 				match s.parse() {
 					Ok(num) => Some(Token::Int(num)),

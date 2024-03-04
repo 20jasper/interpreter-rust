@@ -11,7 +11,7 @@ pub fn run() -> io::Result<()> {
 		io::stdin().read_line(&mut input)?;
 
 		for token in Lexer::new(&input) {
-			println!("{:?}", token);
+			println!("{token:?}");
 		}
 	}
 }

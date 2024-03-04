@@ -6,3 +6,79 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+[lints.rust]
+# deny
+macro_use_extern_crate = "deny"
+unsafe-code = "deny"
+unsafe-op-in-unsafe-fn = "deny"
+
+# warn
+ffi-unwind-calls = "warn"
+let-underscore-drop = "warn"
+missing-abi = "warn"
+non-ascii-idents = "warn"
+unreachable-pub = "warn"
+variant-size-differences = "warn"
+missing_debug_implementations = "warn"
+## groups
+unused = "warn"
+rust-2018-idioms = "warn"
+rust-2018-compatibility = "warn"
+rust-2021-compatibility = "warn"
+
+[lints.clippy]
+# deny
+wildcard_dependencies = "deny"
+wildcard_enum_match_arm = "deny"
+mod_module_files = "deny"
+
+# warn
+## pedantic
+pedantic = "warn"
+missing_errors_doc = "allow"
+missing_panics_doc = "allow"
+must_use_candidate = "allow"
+## cargo
+negative_feature_names = "warn"
+redundant_feature_names = "warn"
+## restriction
+alloc_instead_of_core = "warn"
+arithmetic_side_effects = "warn"
+as_conversions = "warn"
+as_underscore = "warn"
+assertions_on_result_states = "warn"
+create_dir = "warn"
+dbg_macro = "warn"
+decimal_literal_representation = "warn"
+default_union_representation = "warn"
+empty_drop = "warn"
+empty_structs_with_brackets = "warn"
+float_cmp_const = "warn"
+fn_to_numeric_cast_any = "warn"
+format_push_string = "warn"
+if_then_some_else_none = "warn"
+integer_division = "warn"
+mem_forget = "warn"
+modulo_arithmetic = "warn"
+needless_raw_strings = "warn"
+rc_buffer = "warn"
+rc_mutex = "warn"
+same_name_method = "warn"
+semicolon_outside_block = "warn"
+std_instead_of_core = "warn"
+string_lit_chars_any = "warn"
+suspicious_xor_used_as_pow = "warn"
+tests_outside_test_module = "warn"
+todo = "warn"
+try_err = "warn"
+undocumented_unsafe_blocks = "warn"
+unnecessary_safety_comment = "warn"
+unimplemented = "warn"
+unnecessary_self_imports = "warn"
+unneeded_field_pattern = "warn"
+unseparated_literal_suffix = "warn"
+verbose_file_reads = "warn"
+
+[lints.rustdoc]
+broken_intra_doc_links = "warn"
+missing_crate_level_docs = "warn"
