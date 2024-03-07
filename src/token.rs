@@ -1,7 +1,7 @@
 #[derive(Debug, PartialEq, Eq, Clone)]
-pub enum Token {
+pub enum Token<'a> {
 	// Eof,
-	Identifier(String),
+	Identifier(&'a str),
 	Illegal(String),
 	Int(i32),
 	Assign,
@@ -29,8 +29,8 @@ pub enum Token {
 	Return,
 }
 
-impl Token {
-	pub fn try_from_char(s: char) -> Option<Token> {
+impl<'a> Token<'a> {
+	pub fn try_from_char(s: char) -> Option<Token<'a>> {
 		use Token as T;
 		match s {
 			'=' => Some(T::Assign),
@@ -50,8 +50,10 @@ impl Token {
 			_ => None,
 		}
 	}
+}
 
-	pub fn from_string(s: &str) -> Token {
+impl Token<'_> {
+	pub fn from_string(s: &str) -> Token<'_> {
 		use Token as T;
 		match s {
 			"let" => T::Let,
@@ -61,7 +63,7 @@ impl Token {
 			"if" => T::If,
 			"else" => T::Else,
 			"return" => T::Return,
-			_ => T::Identifier(s.into()),
+			_ => T::Identifier(s),
 		}
 	}
 }

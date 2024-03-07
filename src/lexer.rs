@@ -16,7 +16,7 @@ impl<'a> Lexer<'a> {
 		}
 	}
 
-	fn build_str_while<F>(&mut self, start: usize, first: char, condition: F) -> &str
+	fn build_str_while<F>(&mut self, start: usize, first: char, condition: F) -> &'a str
 	where
 		F: Fn(char) -> bool,
 	{
@@ -34,7 +34,7 @@ impl<'a> Lexer<'a> {
 }
 
 impl<'a> Iterator for Lexer<'a> {
-	type Item = Token;
+	type Item = Token<'a>;
 
 	fn next(&mut self) -> Option<Self::Item> {
 		let (i, next) = self
@@ -79,7 +79,7 @@ mod tests {
 	fn tokens_should_not_contain_white_space() {
 		let s = "( = ;";
 
-		let tokens = Lexer::new(s).collect::<Vec<Token>>();
+		let tokens = Lexer::new(s).collect::<Vec<Token<'_>>>();
 		let expected = vec![Token::LeftParen, Token::Assign, Token::Semicolon];
 
 		assert_eq!(tokens, expected);
@@ -89,7 +89,7 @@ mod tests {
 	fn should_parse_single_char_tokens() {
 		let s = "=+-!*/<,>(){};";
 
-		let tokens = Lexer::new(s).collect::<Vec<Token>>();
+		let tokens = Lexer::new(s).collect::<Vec<Token<'_>>>();
 		let expected = vec![
 			Token::Assign,
 			Token::Plus,
@@ -114,12 +114,12 @@ mod tests {
 	fn should_parse_identifiers() {
 		let s = "(  five hello  what;";
 
-		let tokens = Lexer::new(s).collect::<Vec<Token>>();
+		let tokens = Lexer::new(s).collect::<Vec<Token<'_>>>();
 		let expected = vec![
 			Token::LeftParen,
-			Token::Identifier("five".to_string()),
-			Token::Identifier("hello".to_string()),
-			Token::Identifier("what".to_string()),
+			Token::Identifier("five"),
+			Token::Identifier("hello"),
+			Token::Identifier("what"),
 			Token::Semicolon,
 		];
 
@@ -129,7 +129,7 @@ mod tests {
 	#[test]
 	fn should_parse_keywords() {
 		let s = "let return if else  fn true+false;";
-		let tokens = Lexer::new(s).collect::<Vec<Token>>();
+		let tokens = Lexer::new(s).collect::<Vec<Token<'_>>>();
 
 		let expected = vec![
 			Token::Let,
@@ -149,7 +149,7 @@ mod tests {
 	#[test]
 	fn should_parse_integers() {
 		let s = "5 10 15 20;";
-		let tokens = Lexer::new(s).collect::<Vec<Token>>();
+		let tokens = Lexer::new(s).collect::<Vec<Token<'_>>>();
 
 		let expected = vec![
 			Token::Int(5),
@@ -165,7 +165,7 @@ mod tests {
 	#[test]
 	fn should_parse_multi_character_non_alphanumeric_tokens() {
 		let s = "!= == ";
-		let tokens = Lexer::new(s).collect::<Vec<Token>>();
+		let tokens = Lexer::new(s).collect::<Vec<Token<'_>>>();
 
 		let expected = vec![Token::NotEq, Token::Eq];
 
