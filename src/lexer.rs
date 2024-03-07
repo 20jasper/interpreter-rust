@@ -1,29 +1,35 @@
-use core::{
-	iter::{self, Peekable},
-	str::Chars,
-};
+use core::{iter::Peekable, str::CharIndices};
 
 use crate::token::Token;
 
 #[derive(Debug)]
 pub struct Lexer<'a> {
-	chars: Peekable<Chars<'a>>,
+	input: &'a str,
+	chars: Peekable<CharIndices<'a>>,
 }
 
 impl<'a> Lexer<'a> {
 	pub fn new(input: &'a str) -> Lexer<'a> {
 		Lexer {
-			chars: input.chars().peekable(),
+			input,
+			chars: input.char_indices().peekable(),
 		}
 	}
 
-	fn build_string_while<F>(&mut self, first: char, condition: F) -> String
+	fn build_str_while<F>(&mut self, start: usize, first: char, condition: F) -> &str
 	where
 		F: Fn(char) -> bool,
 	{
-		iter::once(first)
-			.chain(iter::from_fn(|| self.chars.next_if(|c| condition(*c))))
-			.collect::<String>()
+		let mut end = start + first.len_utf8();
+
+		while let Some((i, c)) = self
+			.chars
+			.next_if(|(_, c)| condition(*c))
+		{
+			end = i + c.len_utf8();
+		}
+
+		&self.input[start..end]
 	}
 }
 
@@ -31,11 +37,15 @@ impl<'a> Iterator for Lexer<'a> {
 	type Item = Token;
 
 	fn next(&mut self) -> Option<Self::Item> {
-		let next = self
+		let (i, next) = self
 			.chars
-			.find(|&c| !c.is_whitespace())?;
+			.find(|(_, c)| !c.is_whitespace())?;
 
-		if self.chars.next_if_eq(&'=').is_some() {
+		if self
+			.chars
+			.next_if(|(_, c)| c == &'=')
+			.is_some()
+		{
 			if next == '=' {
 				return Some(Token::Eq);
 			}
@@ -44,11 +54,11 @@ impl<'a> Iterator for Lexer<'a> {
 
 		Token::try_from_char(next).or_else(|| {
 			if next.is_alphabetic() {
-				let s = self.build_string_while(next, char::is_alphabetic);
+				let s = self.build_str_while(i, next, char::is_alphabetic);
 
 				Some(Token::from_string(s))
 			} else if next.is_numeric() {
-				let s = self.build_string_while(next, char::is_numeric);
+				let s = self.build_str_while(i, next, char::is_numeric);
 
 				match s.parse() {
 					Ok(num) => Some(Token::Int(num)),
