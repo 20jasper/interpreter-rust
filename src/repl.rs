@@ -2,13 +2,13 @@ use crate::lexer::Lexer;
 
 use std::io::{self, Write};
 
-pub fn run() -> io::Result<()> {
+pub fn run(stdin: &mut io::Stdin, stdout: &mut io::Stdout) -> io::Result<()> {
 	loop {
 		print!(">> ");
-		io::stdout().flush()?;
+		stdout.flush()?;
 
 		let mut input = String::default();
-		io::stdin().read_line(&mut input)?;
+		stdin.read_line(&mut input)?;
 
 		for token in Lexer::new(&input) {
 			println!("{token:?}");

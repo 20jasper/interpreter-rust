@@ -6,5 +6,5 @@ fn main() -> io::Result<()> {
 	println!("Hello! This is the Monkey programming language!");
 	println!("Please type a commmand:");
 
-	repl::run()
+	repl::run(&mut io::stdin(), &mut io::stdout())
 }
